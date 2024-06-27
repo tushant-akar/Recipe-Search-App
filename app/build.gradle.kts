@@ -80,6 +80,9 @@ dependencies {
 
     //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    //AdMob
+    implementation(libs.play.services.ads)
 }
 kapt {
     correctErrorTypes = true
