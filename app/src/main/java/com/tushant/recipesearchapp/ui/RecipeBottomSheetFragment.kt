@@ -49,20 +49,23 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         binding.getRecipeBtn.setOnClickListener {
-            animateContainerChange(binding.mainContainer, binding.recipeContainer)
+            animateContainerChange(binding.ingredientsToogle, binding.recipeContainer)
         }
 
         binding.getSimiliarRecipeBtn.setOnClickListener {
-            animateContainerChange(binding.mainContainer, binding.similiarRecipeContainer)
+            animateContainerChange(binding.recipeToogle, binding.similiarRecipeContainer)
+            binding.similiarRecipeBtnToogle.visibility = View.GONE
         }
 
-        // Set click listeners for headers
         binding.ingredientsHeader.setOnClickListener {
             toggleContainerVisibility(binding.ingredientsContainer)
+            binding.recipeContainer.visibility = View.GONE
+            binding.similiarRecipeContainer.visibility = View.GONE
         }
 
         binding.recipeHeader.setOnClickListener {
             toggleContainerVisibility(binding.recipeContainer)
+            binding.similiarRecipeContainer.visibility = View.GONE
         }
 
         binding.similarRecipeHeader.setOnClickListener {
@@ -73,7 +76,8 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
     private fun setupRecyclerViews() {
         // Adapter setup for ingredientsRecyclerView
         val ingredientsAdapter = IngredientsAdapter(Ingredients(emptyList()))
-        binding.recyclerViewIngredients.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewIngredients.layoutManager =
+            GridLayoutManager(requireContext(), 3, GridLayoutManager.HORIZONTAL, false)
         binding.recyclerViewIngredients.adapter = ingredientsAdapter
 
         // Adapter setup for similarRecipeRecyclerView
@@ -82,14 +86,20 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
         binding.recyclerViewSimiliarRecipe.adapter = similarRecipeAdapter
 
         val equipmentAdapter = EquipmentsAdapter(Equipment(emptyList()))
-        binding.recyclerViewEquipments.layoutManager = GridLayoutManager(requireContext(), 3, GridLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewEquipments.layoutManager =
+            GridLayoutManager(requireContext(), 3, GridLayoutManager.HORIZONTAL, false)
         binding.recyclerViewEquipments.adapter = equipmentAdapter
     }
 
     private fun animateContainerChange(hideContainer: View, showContainer: View) {
         hideContainer.visibility = View.GONE
         showContainer.visibility = View.VISIBLE
-        showContainer.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up))
+        showContainer.startAnimation(
+            AnimationUtils.loadAnimation(
+                requireContext(),
+                R.anim.slide_up
+            )
+        )
     }
 
     private fun toggleContainerVisibility(container: View) {
