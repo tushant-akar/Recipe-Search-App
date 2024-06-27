@@ -17,7 +17,8 @@ This Recipe Search App allows users to discover, search, and save their favorite
 - **Retrofit**: HTTP client for API calls.
 - **Room Database**: Local storage for caching favorite recipes.
 - **Coil**: Image loading library for displaying recipe images.
-- **XML Layouts & Jetpack Compose**: UI design using both traditional XML layouts and modern Jetpack Compose where applicable.
+- **XML Layoutse**: UI design using both traditional XML layouts.
+- **Firebase**: Authenatication using Google Sign In.
 
 ## How to Use
 
