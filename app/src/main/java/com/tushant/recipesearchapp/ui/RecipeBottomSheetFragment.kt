@@ -5,22 +5,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tushant.recipesearchapp.R
 import com.tushant.recipesearchapp.data.model.Equipment
+import com.tushant.recipesearchapp.data.model.FavouriteRecipe
 import com.tushant.recipesearchapp.data.model.Ingredients
 import com.tushant.recipesearchapp.data.model.SimiliarRecipeResponse
 import com.tushant.recipesearchapp.databinding.FragmentRecipeBottomSheetBinding
 import com.tushant.recipesearchapp.ui.adapter.bottomSheetFragment.SimilarAdapter
 import com.tushant.recipesearchapp.ui.adapter.recipeFragment.EquipmentsAdapter
 import com.tushant.recipesearchapp.ui.adapter.recipeFragment.IngredientsAdapter
+import com.tushant.recipesearchapp.viewModel.BottomSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
+class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_recipe_bottom_sheet) {
     private var _binding: FragmentRecipeBottomSheetBinding? = null
+    private var isFavourite = false
+    private val args: RecipeBottomSheetFragmentArgs by navArgs()
+    private val bottomSheetViewModel: BottomSheetViewModel by viewModels()
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -43,6 +52,71 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
         binding.recipeContainer.visibility = View.GONE
         binding.similiarRecipeContainer.visibility = View.GONE
 
+        bottomSheetViewModel.fetchRecipeInformation(args.searchResult.id!!)
+        bottomSheetViewModel.fetchIngredients(args.searchResult.id!!)
+        bottomSheetViewModel.fetchNutrition(args.searchResult.id!!)
+        bottomSheetViewModel.fetchEquipment(args.searchResult.id!!)
+
+        var favouriteRecipe: FavouriteRecipe? = null
+
+        binding.backBtn.setOnClickListener {
+            dismiss()
+        }
+
+        bottomSheetViewModel.recipe.observe(viewLifecycleOwner) { recipe ->
+            recipe?.let {
+                binding.recipeName.text = recipe.title
+                binding.recipeTime.text = "${recipe.readyInMinutes} min"
+                binding.servings.text = recipe.servings.toString()
+                binding.recipeSummary.text = recipe.summary
+                binding.recipeInstructions.text = recipe.instructions
+                binding.price.text = recipe.pricePerServing.toString()
+                binding.recipeItemImage.load(recipe.image)
+
+                favouriteRecipe = FavouriteRecipe(
+                    id = recipe.id,
+                    image = recipe.image,
+                    title = recipe.title,
+                    readyInMinutes = recipe.readyInMinutes
+                )
+            }
+        }
+
+
+        binding.fabBtn.setOnClickListener {
+            if (isFavourite) {
+                if (favouriteRecipe != null) {
+                    bottomSheetViewModel.deleteRecipe(favouriteRecipe!!)
+                }
+                Toast.makeText(
+                    requireContext(),
+                    "Recipe removed from favourites.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.fabBtn.setImageResource(R.drawable.ic_heart_unselected)
+            } else {
+                if (favouriteRecipe != null) {
+                    bottomSheetViewModel.insertRecipe(favouriteRecipe!!)
+                }
+                Toast.makeText(requireContext(), "Recipe added to favourites.", Toast.LENGTH_SHORT)
+                    .show()
+                binding.fabBtn.setImageResource(R.drawable.ic_heart_selected)
+            }
+            isFavourite = !isFavourite
+        }
+
+        bottomSheetViewModel.ingredients.observe(viewLifecycleOwner) { ingredients ->
+            ingredients?.let {
+                (binding.recyclerViewIngredients.adapter as IngredientsAdapter).setIngredients(it)
+            }
+        }
+
+        bottomSheetViewModel.equipment.observe(viewLifecycleOwner) { equipment ->
+            equipment?.let {
+                (binding.recyclerViewEquipments.adapter as EquipmentsAdapter).setEquipments(it)
+            }
+        }
+
         // Set click listeners
         binding.getIngredientBtn.setOnClickListener {
             animateContainerChange(binding.mainContainer, binding.ingredientsContainer)
@@ -54,22 +128,22 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.getSimiliarRecipeBtn.setOnClickListener {
             animateContainerChange(binding.recipeToogle, binding.similiarRecipeContainer)
-            binding.similiarRecipeBtnToogle.visibility = View.GONE
         }
 
         binding.ingredientsHeader.setOnClickListener {
-            toggleContainerVisibility(binding.ingredientsContainer)
-            binding.recipeContainer.visibility = View.GONE
-            binding.similiarRecipeContainer.visibility = View.GONE
+            if (binding.ingredientsToogle.visibility == View.GONE) {
+                binding.ingredientsToogle.visibility = View.VISIBLE
+                binding.recipeContainer.visibility = View.GONE
+                binding.similiarRecipeContainer.visibility = View.GONE
+            }
+
         }
 
         binding.recipeHeader.setOnClickListener {
-            toggleContainerVisibility(binding.recipeContainer)
-            binding.similiarRecipeContainer.visibility = View.GONE
-        }
-
-        binding.similarRecipeHeader.setOnClickListener {
-            toggleContainerVisibility(binding.similiarRecipeContainer)
+            if (binding.recipeToogle.visibility == View.GONE) {
+                binding.recipeToogle.visibility = View.VISIBLE
+                binding.similiarRecipeContainer.visibility = View.GONE
+            }
         }
     }
 
@@ -102,13 +176,6 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment() {
         )
     }
 
-    private fun toggleContainerVisibility(container: View) {
-        if (container.visibility == View.VISIBLE) {
-            container.visibility = View.GONE
-        } else {
-            container.visibility = View.VISIBLE
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

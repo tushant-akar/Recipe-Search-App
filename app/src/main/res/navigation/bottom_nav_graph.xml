@@ -53,5 +53,20 @@
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_recipeBottomSheetFragment2"
+            app:destination="@id/recipeBottomSheetFragment2" />
     </fragment>
+    <dialog
+        android:id="@+id/recipeBottomSheetFragment2"
+        android:name="com.tushant.recipesearchapp.ui.RecipeBottomSheetFragment"
+        android:label="fragment_recipe_bottom_sheet"
+        tools:layout="@layout/fragment_recipe_bottom_sheet" >
+        <action
+            android:id="@+id/action_recipeBottomSheetFragment2_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <argument
+            android:name="searchResult"
+            app:argType="com.tushant.recipesearchapp.data.model.SearchRecipeResponse$Result" />
+    </dialog>
 </navigation>

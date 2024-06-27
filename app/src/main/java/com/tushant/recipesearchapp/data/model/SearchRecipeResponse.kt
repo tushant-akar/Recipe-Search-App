@@ -2,17 +2,12 @@ package com.tushant.recipesearchapp.data.model
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class SearchRecipeResponse(
-    @SerializedName("number")
-    val number: Int?,
-    @SerializedName("offset")
-    val offset: Int?,
     @SerializedName("results")
-    val results: List<Result?>?,
-    @SerializedName("totalResults")
-    val totalResults: Int?
-) {
+    var results: List<Result?>?,
+): Serializable {
     data class Result(
         @SerializedName("id")
         val id: Int?,
@@ -22,5 +17,5 @@ data class SearchRecipeResponse(
         val imageType: String?,
         @SerializedName("title")
         val title: String?
-    )
+    ): Serializable
 }

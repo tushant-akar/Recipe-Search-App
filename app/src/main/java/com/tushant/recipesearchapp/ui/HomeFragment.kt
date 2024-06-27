@@ -71,7 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupRecyclerView() {
-        recipesAdapter = AllRecipesAdapter(RandomRecipes(emptyList()))
+        recipesAdapter = AllRecipesAdapter(requireContext(), RandomRecipes(emptyList()))
         binding.recyclerViewRecipes.apply {
             adapter = recipesAdapter
             layoutManager = LinearLayoutManager(requireContext())

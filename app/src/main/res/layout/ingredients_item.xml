@@ -7,8 +7,9 @@
 
     <ImageView
         android:id="@+id/ingredient_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
         android:background="@drawable/circular_border"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -22,7 +23,7 @@
         android:text="Ingredietnt Name"
         android:textColor="#171B21"
         android:layout_marginTop="5dp"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:fontFamily="@font/inter_medium"
         android:textAlignment="center"/>
 
