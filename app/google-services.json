@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "478287484241",
+    "project_id": "recipe-search-app-e609d",
+    "storage_bucket": "recipe-search-app-e609d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478287484241:android:f8d5d091b1f1aeed1aaf70",
+        "android_client_info": {
+          "package_name": "com.tushant.recipesearchapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478287484241-68tc0eddqa362no0duc2dr5lactj5png.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tushant.recipesearchapp",
+            "certificate_hash": "670d6332bcdc5cc9645b4af44c4073974575f117"
+          }
+        },
+        {
+          "client_id": "478287484241-1vc8lr7m24469aogud9p01dk8rd7umam.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS4NeHRPw4FeVh_N4CS_AKKtZgTfLf9OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478287484241-1vc8lr7m24469aogud9p01dk8rd7umam.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

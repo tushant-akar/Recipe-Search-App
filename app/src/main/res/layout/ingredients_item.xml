@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ingredient_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/circular_border"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:clipToOutline="true"
+        android:src="@drawable/login_background_image" />
+
+    <TextView
+        android:id="@+id/ingredientName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ingredietnt Name"
+        android:textColor="#171B21"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/inter_medium"
+        android:textAlignment="center"/>
+
+</LinearLayout>
