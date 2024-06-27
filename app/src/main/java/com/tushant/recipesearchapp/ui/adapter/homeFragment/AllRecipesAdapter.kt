@@ -32,7 +32,7 @@ class AllRecipesAdapter(
 
         fun bind(recipe: RandomRecipes.Recipe) {
             recipeItemName.text = recipe.title
-            recipeItemTime.text = "${recipe.readyInMinutes} min"
+            recipeItemTime.text = "Ready in ${recipe.readyInMinutes} min"
             recipeItemImage.load(recipe.image)
 
             itemView.setOnClickListener {

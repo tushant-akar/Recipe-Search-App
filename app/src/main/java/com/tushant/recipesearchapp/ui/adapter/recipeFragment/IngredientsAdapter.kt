@@ -27,7 +27,7 @@ class IngredientsAdapter(private var ingredients: Ingredients) :
     override fun onBindViewHolder(holder: IngredientsViewHolder, position: Int) {
         val ingredient = ingredients.ingredients?.get(position)
         holder.ingredientName.text = ingredient?.name
-        holder.ingredientImage.load(ingredient?.image)
+        holder.ingredientImage.load("https://img.spoonacular.com/ingredients_100x100/${ingredient?.image}")
     }
 
     override fun getItemCount() = ingredients.ingredients?.size ?: 0

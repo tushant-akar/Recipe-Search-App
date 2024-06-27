@@ -30,7 +30,7 @@ class PopularRecipeAdapter(private var recipes: RandomRecipes) :
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val popularRecipe = recipes.recipes?.get(position)
         holder.popularItemName.text = popularRecipe?.title
-        holder.popularItemTime.text = "${popularRecipe?.readyInMinutes} min"
+        holder.popularItemTime.text = "Ready in ${popularRecipe?.readyInMinutes} min"
         holder.popularItemImage.load(popularRecipe?.image)
 
     }

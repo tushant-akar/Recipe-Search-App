@@ -1,11 +1,13 @@
 package com.tushant.recipesearchapp.ui
 
 import android.os.Bundle
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -69,6 +71,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
         } else {
             favouriteRecipe = args.favouriteRecipe
             isFavourite = true
+            binding.favBtn.setImageResource(R.drawable.ic_heart_selected)
         }
 
         if (args.recipe?.id != null) {
@@ -116,8 +119,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
                 binding.recipeName.text = recipe.title
                 binding.recipeTime.text = "${recipe.readyInMinutes} min"
                 binding.servings.text = recipe.servings.toString()
-                binding.recipeSummary.text = recipe.summary
-                binding.recipeInstructions.text = recipe.instructions
+                binding.recipeSummary.text = htmlToPlainText(recipe.summary ?: "")
+                binding.recipeInstructions.text = htmlToPlainText(recipe.instructions ?: "")
                 binding.price.text = recipe.pricePerServing.toString()
                 binding.recipeItemImage.load(recipe.image)
             }
@@ -147,6 +150,11 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe) {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
+    }
+
+    private fun htmlToPlainText(html: String): String {
+        val spanned: Spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        return spanned.toString()
     }
 
     override fun onDestroyView() {

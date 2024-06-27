@@ -1,12 +1,15 @@
 package com.tushant.recipesearchapp.ui
 
 import android.os.Bundle
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +22,7 @@ import com.tushant.recipesearchapp.data.model.Ingredients
 import com.tushant.recipesearchapp.data.model.SimiliarRecipeResponse
 import com.tushant.recipesearchapp.databinding.FragmentRecipeBottomSheetBinding
 import com.tushant.recipesearchapp.ui.adapter.bottomSheetFragment.SimilarAdapter
+import com.tushant.recipesearchapp.ui.adapter.homeFragment.AllRecipesAdapter
 import com.tushant.recipesearchapp.ui.adapter.recipeFragment.EquipmentsAdapter
 import com.tushant.recipesearchapp.ui.adapter.recipeFragment.IngredientsAdapter
 import com.tushant.recipesearchapp.viewModel.BottomSheetViewModel
@@ -56,6 +60,7 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
         bottomSheetViewModel.fetchIngredients(args.searchResult.id!!)
         bottomSheetViewModel.fetchNutrition(args.searchResult.id!!)
         bottomSheetViewModel.fetchEquipment(args.searchResult.id!!)
+        bottomSheetViewModel.fetchSimilarRecipes(args.searchResult.id!!)
 
         var favouriteRecipe: FavouriteRecipe? = null
 
@@ -68,8 +73,8 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
                 binding.recipeName.text = recipe.title
                 binding.recipeTime.text = "${recipe.readyInMinutes} min"
                 binding.servings.text = recipe.servings.toString()
-                binding.recipeSummary.text = recipe.summary
-                binding.recipeInstructions.text = recipe.instructions
+                binding.recipeSummary.text = htmlToPlainText(recipe.summary ?: "")
+                binding.recipeInstructions.text = htmlToPlainText(recipe.instructions ?: "")
                 binding.price.text = recipe.pricePerServing.toString()
                 binding.recipeItemImage.load(recipe.image)
 
@@ -120,6 +125,7 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
         // Set click listeners
         binding.getIngredientBtn.setOnClickListener {
             animateContainerChange(binding.mainContainer, binding.ingredientsContainer)
+            binding.getSimiliarRecipeBtn.visibility = View.VISIBLE
         }
 
         binding.getRecipeBtn.setOnClickListener {
@@ -128,6 +134,7 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
 
         binding.getSimiliarRecipeBtn.setOnClickListener {
             animateContainerChange(binding.recipeToogle, binding.similiarRecipeContainer)
+            binding.getSimiliarRecipeBtn.visibility = View.GONE
         }
 
         binding.ingredientsHeader.setOnClickListener {
@@ -145,13 +152,19 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
                 binding.similiarRecipeContainer.visibility = View.GONE
             }
         }
+
+        bottomSheetViewModel.similarRecipe.observe(viewLifecycleOwner, Observer { similarRecipes ->
+            similarRecipes?.let {
+                (binding.recyclerViewSimiliarRecipe.adapter as SimilarAdapter).setSimilarRecipes(it)
+            }
+        })
     }
 
     private fun setupRecyclerViews() {
         // Adapter setup for ingredientsRecyclerView
         val ingredientsAdapter = IngredientsAdapter(Ingredients(emptyList()))
         binding.recyclerViewIngredients.layoutManager =
-            GridLayoutManager(requireContext(), 3, GridLayoutManager.HORIZONTAL, false)
+            GridLayoutManager(requireContext(), 3)
         binding.recyclerViewIngredients.adapter = ingredientsAdapter
 
         // Adapter setup for similarRecipeRecyclerView
@@ -161,7 +174,7 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
 
         val equipmentAdapter = EquipmentsAdapter(Equipment(emptyList()))
         binding.recyclerViewEquipments.layoutManager =
-            GridLayoutManager(requireContext(), 3, GridLayoutManager.HORIZONTAL, false)
+            GridLayoutManager(requireContext(), 3)
         binding.recyclerViewEquipments.adapter = equipmentAdapter
     }
 
@@ -174,6 +187,11 @@ class RecipeBottomSheetFragment : BottomSheetDialogFragment(R.layout.fragment_re
                 R.anim.slide_up
             )
         )
+    }
+
+    private fun htmlToPlainText(htmlText: String): String {
+        val spanned: Spanned = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        return spanned.toString()
     }
 
 

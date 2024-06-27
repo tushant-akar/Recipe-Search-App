@@ -1,12 +1,10 @@
 package com.tushant.recipesearchapp.ui.adapter.recipeFragment
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.tushant.recipesearchapp.R
@@ -27,16 +25,9 @@ class EquipmentsAdapter(private var equipment: Equipment) :
     }
 
     override fun onBindViewHolder(holder: EquipmentsViewHolder, position: Int) {
-        val ingredient = equipment.equipment?.get(position)
-        holder.equipmentName.text = ingredient?.name
-        if (ingredient?.image != null) {
-            holder.equipmentImage.load(ingredient.image)
-            Log.d("EquipmentsAdapter", "Image found for ${ingredient.name}, ${ingredient.image}")
-        }
-        else {
-            Log.d("EquipmentsAdapter", "Image not found for ${ingredient?.name}")
-        }
-
+        val equipment = equipment.equipment?.get(position)
+        holder.equipmentName.text = equipment?.name
+        holder.equipmentImage.load("https://img.spoonacular.com/equipment_100x100/${equipment?.image}")
 
     }
 

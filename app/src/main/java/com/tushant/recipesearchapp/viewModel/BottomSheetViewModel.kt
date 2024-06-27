@@ -10,6 +10,7 @@ import com.tushant.recipesearchapp.data.model.FavouriteRecipe
 import com.tushant.recipesearchapp.data.model.Ingredients
 import com.tushant.recipesearchapp.data.model.Nutrition
 import com.tushant.recipesearchapp.data.model.RandomRecipes
+import com.tushant.recipesearchapp.data.model.SimiliarRecipeResponse
 import com.tushant.recipesearchapp.data.remote.APIHelper
 import com.tushant.recipesearchapp.data.repository.FavouriteRecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +35,9 @@ class BottomSheetViewModel @Inject constructor(
     private val _equipment = MutableLiveData<Equipment>()
     val equipment: LiveData<Equipment> get() = _equipment
 
+    private val _similarRecipe = MutableLiveData<SimiliarRecipeResponse>()
+    val similarRecipe: LiveData<SimiliarRecipeResponse> get() = _similarRecipe
+
     fun fetchRecipeInformation(recipeId: Int) {
         viewModelScope.launch {
             try {
@@ -42,6 +46,18 @@ class BottomSheetViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("RecipeViewModel", "Error fetching recipe information ${e.message}")
+            }
+        }
+    }
+
+    fun fetchSimilarRecipes(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val similarRecipes = apiHelper.getSimilarRecipes(recipeId)
+                _similarRecipe.postValue(similarRecipes)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("RecipeViewModel", "Error fetching similar recipes ${e.message}")
             }
         }
     }
@@ -81,6 +97,8 @@ class BottomSheetViewModel @Inject constructor(
             }
         }
     }
+
+
 
     fun insertRecipe(recipe: FavouriteRecipe) {
         viewModelScope.launch {

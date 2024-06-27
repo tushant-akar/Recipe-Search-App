@@ -36,11 +36,11 @@ class FavouriteRecipeAdapter(
     ) {
         val recipe = recipes[position]
         holder.recipeItemName.text = recipe.title
-        holder.recipeItemTime.text = "${recipe.readyInMinutes} min"
+        holder.recipeItemTime.text = "Ready in ${recipe.readyInMinutes} min"
         holder.recipeItemImage.load(recipe.image)
 
         holder.itemView.setOnClickListener {
-            recipe?.let { onItemClickListener?.invoke(it) }
+            recipe.let { onItemClickListener?.invoke(it) }
         }
     }
 

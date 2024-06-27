@@ -30,7 +30,7 @@ class SimilarAdapter(private var recipes: SimiliarRecipeResponse) :
     override fun onBindViewHolder(holder: SimilarViewHolder, position: Int) {
         val recipe = recipes[position]
         holder.recipeItemName.text = recipe.title
-        holder.recipeItemTime.text = "${recipe.readyInMinutes} min"
+        holder.recipeItemTime.text = "Ready in ${recipe.readyInMinutes} min"
         holder.recipeItemImage.load(R.drawable.login_background_image)
     }
 
